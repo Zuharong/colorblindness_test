@@ -1,11 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Colorblindness Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    
+  <!-- Color blindness filters (SVG feColorMatrix) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="protanopia"><feColorMatrix type="matrix" values="0.567 0.433 0 0 0  0.558 0.442 0 0 0  0 0.242 0.758 0 0  0 0 0 1 0"/></filter>
+    <filter id="deuteranopia"><feColorMatrix type="matrix" values="0.625 0.375 0 0 0  0.7 0.3 0 0 0  0 0.3 0.7 0 0  0 0 0 1 0"/></filter>
+    <filter id="tritanopia"><feColorMatrix type="matrix" values="0.95 0.05 0 0 0  0 0.433 0.567 0 0  0 0.475 0.525 0 0  0 0 0 1 0"/></filter>
+    <filter id="achromatopsia"><feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/></filter>
+  </svg>
+
+  <header class="topbar">
+    <span class="logo"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="#3a3a45"/><path d="M12 6l6 3-6 3-6-3zM6 12.5l6 3 6-3M6 15.5l6 3 6-3" fill="none" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>Cardan</span>
+    <span class="help"><i>?</i> Need help?</span>
+  </header>
+
+  <main class="app">
+
+    <!-- Start screen -->
+    <section id="screen-start" class="screen active">
+      <div class="hero">
+        <svg class="art" viewBox="0 0 230 190" aria-hidden="true">
+          <path d="M18 34l8 14M34 24l4 12M10 52l12 4" stroke="#333" stroke-width="3.5" stroke-linecap="round"/>
+          <rect x="24" y="44" width="170" height="124" rx="8" fill="#fff" stroke="#333" stroke-width="3"/>
+          <path d="M24 52a8 8 0 0 1 8-8h154a8 8 0 0 1 8 8v12H24z" fill="#3a3a45"/>
+          <circle cx="38" cy="54" r="3.5" fill="#e5483f"/><circle cx="50" cy="54" r="3.5" fill="#f2b93b"/><circle cx="62" cy="54" r="3.5" fill="#4cb95b"/>
+          <rect x="38" y="76" width="44" height="36" rx="4" fill="#a18a4a"/><rect x="88" y="76" width="44" height="36" rx="4" fill="#6f7fb0"/><rect x="138" y="76" width="44" height="36" rx="4" fill="#9a9a3a"/>
+          <rect x="38" y="120" width="44" height="36" rx="4" fill="#5f6fa6"/><rect x="88" y="120" width="44" height="36" rx="4" fill="#7a7a58"/><rect x="138" y="120" width="44" height="36" rx="4" fill="#b3b7ee"/>
+          <circle cx="178" cy="150" r="26" fill="#fff"/>
+          <path d="M156 150q22-26 44 0q-22 26-44 0z" fill="none" stroke="#333" stroke-width="4.5" stroke-linejoin="round"/>
+          <circle cx="178" cy="150" r="7" fill="none" stroke="#333" stroke-width="4.5"/>
+          <path d="M160 168L198 132" stroke="#333" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <div class="hero-text">
+          <div>
+            <h2>Welcome to the Colorblindness Test!</h2>
+            <p>This is a short test to help you experience the <strong>frustrations</strong> of bad online accessibility for people with colorblindness.</p>
+          </div>
+          <div>
+            <p class="ready">Ready to see how frustrating it can be?</p>
+            <button id="btn-start" class="pill wide">Start the test <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Question screen -->
+    <section id="screen-question" class="screen">
+      <h1 class="brand">Colorblindness Test</h1>
+      <h2 id="q-prompt" class="prompt"></h2>
+      <div class="layout">
+        <div id="stage" class="panel"></div>
+        <aside class="side">
+          <div class="card">
+            <p>Timer</p>
+            <p id="hud-time" class="time">00:20</p>
+            <p class="small">Answer before time runs out!</p>
+          </div>
+          <div class="card">
+            <p>Score: <span id="hud-score" class="small">0%</span></p>
+            <div class="meter"><div id="score-fill"></div></div>
+            <p id="hud-progress" class="small"></p>
+          </div>
+          <button id="btn-check" class="pill">Submit answer</button>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Final screen -->
+    <section id="screen-end" class="screen">
+      <div class="done">
+        <h2>Test completed!</h2>
+        <p class="sub">You’ve made it through all the challenges.</p>
+        <hr>
+        <div class="stats">
+          <div class="stat"><strong id="final-accuracy"></strong><span>Accuracy</span></div>
+          <div class="stat"><strong id="final-time"></strong><span>Time taken</span></div>
+        </div>
+        <div class="note learn"><strong>What did you learn?</strong><p>Colors that seem obvious to you aren’t always easy to distinguish for everyone. Websites should never rely on color alone to communicate important information.</p></div>
+        <div class="note"><strong>Remember</strong><p>A more accessible website makes the internet easier to use for everyone.</p></div>
+        <div class="actions">
+          <button id="btn-restart" class="pill ghost">Redo test <span aria-hidden="true">⟳</span></button>
+          <button id="btn-home" class="pill">Return to home <span aria-hidden="true">→</span></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Result overlay after each question -->
+  <div id="overlay" class="overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="ov-heading">
+      <div class="cols">
+        <section>
+          <h3 id="ov-heading">Your result</h3>
+          <p id="ov-verdict" class="verdict"></p>
+          <p id="ov-why" class="small"></p>
+          <h3>This was:</h3>
+          <p id="ov-name" class="name"></p>
+          <p id="ov-sub"></p>
+          <div class="fact">
+            <span class="bulb" aria-hidden="true">💡</span>
+            <div><strong>Did you know?</strong><p id="ov-fact" class="small"></p></div>
+          </div>
+        </section>
+        <section class="right">
+          <h3>What does this mean?</h3>
+          <p id="ov-meaning" class="small"></p>
+          <h3>What can be difficult?</h3>
+          <ul id="ov-list" class="dots"></ul>
+        </section>
+      </div>
+      <div class="center"><button id="btn-next" class="pill">Continue →</button></div>
+    </div>
+  </div>
+
+  <script src="js/questions.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
