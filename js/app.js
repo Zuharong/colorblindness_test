@@ -83,12 +83,12 @@ document.body.dataset.screen = "start";
     updateScore();
 
     const v = VARIANTS[q.filter];
-    const state = correct ? "good" : timedOut ? "time" : "bad";
+    const state = correct ? "good" : timedOut ? "timeout" : "bad";
     overlay.querySelector(".modal").className = "modal " + state;
-    $("ov-verdict").textContent = { good: "✓ Correct", time: "⏱ Time's up", bad: "✕ Incorrect" }[state];
+    $("ov-verdict").textContent = { good: "✓ Correct", timeout: "⏱ Time's up", bad: "✕ Incorrect" }[state];
     $("ov-why").textContent = {
       good: "You found the right answer despite the filter. Many people with this condition need extra cues besides color.",
-      time: "You ran out of time. Telling similar colors apart can take much longer with color blindness.",
+      timeout: "You ran out of time. Telling similar colors apart can take much longer with color blindness.",
       bad: "The colors were too similar to distinguish easily, showing how relying on color alone can make websites difficult to use."
     }[state];
     $("ov-name").textContent = v.name;
